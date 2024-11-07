@@ -5,9 +5,8 @@ public class Calculator {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
-
         try {
-            String result = Calculator.calculation.evaluate(input);
+            String result = Calculator.Calculation.evaluate(input);
             System.out.println("Результат: " + result);
         } catch (Exception e) {
             System.out.println("Ошибка: " + e.getMessage());
@@ -15,61 +14,47 @@ public class Calculator {
         }
     }
 
-    public static class calculation {
+    public static class Calculation {
         private static String evaluate(String input) throws Exception {
-
-
-                String[] parts = input.split(" ");
-                String firstString = parts[0];
-                String operator = parts[1];
-                String secondString = parts[2];
-
-
-            numberValidation validation = new numberValidation();
-            numberConvertion convertion = new numberConvertion();
-
+            String[] parts = input.split(" ");
+            String firstString = parts[0];
+            String operator = parts[1];
+            String secondString = parts[2];
+            NumberValidation validation = new NumberValidation();
+            NumberConvertion convertion = new NumberConvertion();
             if (parts.length != 3) {
                 throw new Exception("Неверный формат ввода. Используйте формат: операнд оператор операнд.");
             }
-
             boolean isRoman = validation.isRoman(firstString) && validation.isRoman(secondString);
             boolean isArabic = validation.isArabic(firstString) && validation.isArabic(secondString);
-
             if (isRoman && isArabic) {
                 throw new Exception("Используйте только целые арабские или только римские цифры.");
             }
-
             int firstOperand;
             if (isRoman) {
                 firstOperand = convertion.romanToArabic(firstString);
             } else {
                 firstOperand = Integer.parseInt(firstString);
             }
-
             int secondOperand;
             if (isRoman) {
                 secondOperand = convertion.romanToArabic(secondString);
             } else {
                 secondOperand = Integer.parseInt(secondString);
             }
-
             if (firstOperand < 1 || firstOperand > 10 || secondOperand < 1 || secondOperand > 10) {
                 throw new Exception("Числа должны быть от 1 до 10 включительно.");
             }
-
-            int result = mathOperation.performOperation(firstOperand, secondOperand, operator);
+            int result = MathOperation.performOperation(firstOperand, secondOperand, operator);
 
             if (isRoman && result < 1) {
                 throw new Exception("Результат римской операции не может быть меньше еденицы.");
             }
-
-            return isRoman
-                    ? convertion.arabicToRoman(result)
-                    : String.valueOf(result);
+            return isRoman ? convertion.arabicToRoman(result) : String.valueOf(result);
         }
     }
 
-    public static class numberValidation {
+    public static class NumberValidation {
         private static boolean isArabic(String value) {
             try {
                 int number = Integer.parseInt(value);
@@ -81,7 +66,7 @@ public class Calculator {
 
         boolean isRoman(String value) {
             try {
-                numberConvertion.romanToArabic(value);
+                NumberConvertion.romanToArabic(value);
                 return true;
             } catch (Exception e) {
                 return false;
@@ -89,7 +74,7 @@ public class Calculator {
         }
     }
 
-    public static class numberConvertion {
+    public static class NumberConvertion {
         private static int romanToArabic(String roman) throws Exception {
             switch (roman) {
                 case "I":
@@ -121,12 +106,10 @@ public class Calculator {
             String[] units = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
             String[] tens = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC", "C"};
             return tens[number / 10] + units[number % 10];
-
-
         }
     }
 
-    public static class mathOperation {
+    public static class MathOperation {
         private static int performOperation(int num1, int num2, String operator) throws Exception {
             switch (operator) {
                 case "+":
